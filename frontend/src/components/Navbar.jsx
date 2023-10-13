@@ -14,12 +14,8 @@ import {
   Tooltip,
   MenuItem,
   Grow,
-  FormControl,
-  Input,
-  InputAdornment,
 } from '@mui/material';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
-import CloseIcon from '@mui/icons-material/Close';
 import SearchIcon from '@mui/icons-material/Search';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -71,10 +67,6 @@ const Navbar = () => {
     } catch (err) {
       console.log(err);
     }
-  };
-
-  const handleOpenSearch = () => {
-    setSearchOpen(!searchOpen);
   };
 
   const closeCartDrawer = () => {
@@ -445,16 +437,6 @@ const Navbar = () => {
                 )}
               </Menu>
             </Box>
-            <IconButton
-              onClick={handleOpenSearch}
-              color='inherit'
-              sx={{
-                height: '100%',
-                p: 0,
-              }}
-            >
-              <SearchIcon sx={{ fontSize: 36 }} />
-            </IconButton>
             {/* Shopping cart icon to navigate to shopping cart page */}
             <Tooltip title='Shopping cart'>
               <IconButton
@@ -472,41 +454,6 @@ const Navbar = () => {
             </Tooltip>
             <CartMenu open={cartOpen} onClose={closeCartDrawer} />
           </Box>
-          {/* Search box */}
-          {searchOpen && (
-            <Box
-              sx={{
-                width: '100%',
-                height: '80%',
-                zIndex: 3,
-                display: 'flex',
-                justifyContent: 'flex-end',
-                position: 'absolute',
-                backgroundColor: 'background.default',
-                borderRadius: 2,
-              }}
-            >
-              <FormControl fullWidth variant='standard'>
-                <Input
-                  placeholder='Search...'
-                  autoFocus
-                  disableUnderline
-                  endAdornment={
-                    <InputAdornment position='end'>
-                      <IconButton onClick={() => setSearchOpen(false)}>
-                        <CloseIcon />
-                      </IconButton>
-                    </InputAdornment>
-                  }
-                  startAdornment={<SearchIcon />}
-                  sx={{
-                    height: '100%',
-                    pl: 2,
-                  }}
-                />
-              </FormControl>
-            </Box>
-          )}
         </Toolbar>
       </Container>
     </AppBar>
