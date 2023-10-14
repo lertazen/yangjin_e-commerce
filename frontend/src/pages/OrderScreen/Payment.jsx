@@ -17,9 +17,11 @@ import { getUserInfo } from '../../utils/userHelper';
 import { useContext } from 'react';
 import { CheckoutContext } from '../../contexts/CheckoutContext';
 
-const publishableKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
+// const publishableKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
 
-const stripePromise = loadStripe(publishableKey);
+const stripePromise = loadStripe(
+  'pk_test_51Nto4lLS3G7Jd5UEkQusfDxqnnfkLTu44dNEA2SSj9jAi2ZN3klrxrh5mqefbYAKEkglCv4fARkEGiTGX1gwyZxV00tlEQip9L'
+);
 
 const Payment = () => {
   const theme = useTheme();
