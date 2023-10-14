@@ -60,7 +60,6 @@ const CheckoutComplete = () => {
         const fetchedOrder = await fetchOrder(paymentIntentId);
 
         if (fetchedOrder) {
-          console.log(fetchedOrder);
           const fetchedProducts = await fetchCartProducts(
             fetchedOrder.products
           );

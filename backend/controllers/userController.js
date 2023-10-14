@@ -181,8 +181,6 @@ const updateProfile = asyncHandler(async (req, res) => {
 //@access     user private
 const getOrder = asyncHandler(async (req, res) => {
   const { paymentIntentId } = req.query;
-  console.log('paymentIntentId: ', paymentIntentId);
-  console.log('userId: ', req.userId);
   const fetchedOrder = await Order.findOne({
     paymentIntentId: paymentIntentId,
     userId: req.userId,
