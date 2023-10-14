@@ -7,7 +7,7 @@ import {
 } from '@stripe/react-stripe-js';
 import { Box, Button, CircularProgress, Typography } from '@mui/material';
 
-const HOSTNAME = import.meta.env.VITE_HOST_NAME;
+const HOSTNAME = 'https://yangjintibetangarden.onrender.com';
 
 const CheckoutForm = () => {
   const stripe = useStripe();
