@@ -1,12 +1,14 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { Container, Typography, Box, CircularProgress } from '@mui/material';
 import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutlineOutlined';
 import StripeWrapper from './StripeWrapper';
 import { fetchOrder } from '../services/user-services';
 import OrderDetailCard from './OrderDetailCard';
 import { fetchCartProducts } from '../services/cart-services';
+import { ShoppingCartContext } from '../contexts/ShoppingCartContext';
 
 const CheckoutComplete = () => {
+  const { setCart } = useContext(ShoppingCartContext);
   const [message, setMessage] = useState(null);
   const [order, setOrder] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -32,6 +34,7 @@ const CheckoutComplete = () => {
           });
           setOrder({ ...fetchedOrder, products: updatedProducts });
           setMessage('Thank you for your purchase!');
+          setCart([]);
         }
       } catch (err) {
         console.log(err);
