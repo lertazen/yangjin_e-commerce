@@ -1,4 +1,4 @@
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation, useParams, useNavigate } from 'react-router-dom';
 import {
   Container,
   Box,
@@ -6,7 +6,6 @@ import {
   Drawer,
   IconButton,
   useTheme,
-  Skeleton,
   useMediaQuery,
   Divider,
   InputLabel,
@@ -24,6 +23,7 @@ import { fetchProductsByFilters } from '../../services/products-services';
 const Products = () => {
   const theme = useTheme();
 
+  const navigate = useNavigate();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const sortMethod = queryParams.get('sort');
@@ -60,6 +60,12 @@ const Products = () => {
 
   const handleSortChange = (event) => {
     setSort(event.target.value);
+
+    const newSortMethod = sortQuery[event.target.value];
+    const newUrl = new URLSearchParams(location.search);
+    newUrl.set('sort', newSortMethod);
+
+    navigate(location.pathname + '?' + newUrl.toString());
   };
 
   const [materialChecked, setMaterialChecked] = useState({});
@@ -71,6 +77,18 @@ const Products = () => {
 
   const fetchProductsData = async () => {
     switch (sortMethod) {
+      case 'featured':
+        setSort(0);
+        break;
+      case 'priceLowToHigh':
+        setSort(1);
+        break;
+      case 'priceHighToLow':
+        setSort(2);
+        break;
+      case 'averageRating':
+        setSort(3);
+        break;
       case 'newestArrival':
         setSort(4);
         break;
@@ -100,6 +118,7 @@ const Products = () => {
   };
 
   useEffect(() => {
+    console.log(sortMethod);
     fetchProductsData();
   }, [
     category,
@@ -199,8 +218,8 @@ const Products = () => {
                 <Select
                   labelId='select-sort-label'
                   id='select-sort'
-                  defaultValue={0}
                   autoWidth
+                  value={sort}
                   onChange={handleSortChange}
                   label='Sort by:'
                 >

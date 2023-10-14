@@ -16,7 +16,6 @@ import {
   Grow,
 } from '@mui/material';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
-import SearchIcon from '@mui/icons-material/Search';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import MenuIcon from '@mui/icons-material/Menu';
 import { clearCredentials, getUserInfo } from '../utils/userHelper.js';
@@ -32,7 +31,6 @@ const Navbar = () => {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [cartOpen, setCartOpen] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
   const [shopListShow, setShopListShow] = useState(false);
   const [loginDialogOpen, setLoginDialogOpen] = useState(false);
   const navigate = useNavigate();
