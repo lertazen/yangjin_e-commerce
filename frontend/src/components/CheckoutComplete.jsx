@@ -1,54 +1,15 @@
 import { useState, useEffect } from 'react';
 import { Container, Typography, Box, CircularProgress } from '@mui/material';
 import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutlineOutlined';
-import { useStripe } from '@stripe/react-stripe-js';
 import StripeWrapper from './StripeWrapper';
 import { fetchOrder } from '../services/user-services';
 import OrderDetailCard from './OrderDetailCard';
 import { fetchCartProducts } from '../services/cart-services';
 
 const CheckoutComplete = () => {
-  const stripe = useStripe();
   const [message, setMessage] = useState(null);
   const [order, setOrder] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const clientSecret = new URLSearchParams(window.location.search).get(
-      'payment_intent_client_secret'
-    );
-
-    if (clientSecret && stripe) {
-      stripe
-        .retrievePaymentIntent(clientSecret)
-        .then(({ paymentIntent }) => {
-          if (paymentIntent) {
-            switch (paymentIntent.status) {
-              case 'succeeded':
-                setMessage('Thank you for your purchase!');
-                break;
-              case 'processing':
-                setMessage('Your payment is processing.');
-                break;
-              case 'requires_payment_method':
-                setMessage(
-                  'Your payment was not successful, please try again.'
-                );
-                break;
-              default:
-                setMessage('Something went wrong.');
-                break;
-            }
-          } else {
-            setMessage('Failed to retrieve payment details.');
-          }
-        })
-        .catch((error) => {
-          setMessage('Error occurred while retrieving payment details.');
-          console.error(error);
-        });
-    }
-  }, [stripe]);
 
   useEffect(() => {
     const paymentIntentId = new URLSearchParams(window.location.search).get(
@@ -70,6 +31,7 @@ const CheckoutComplete = () => {
             return { ...product, images: fetchedProduct.images };
           });
           setOrder({ ...fetchedOrder, products: updatedProducts });
+          setMessage('Thank you for your purchase!');
         }
       } catch (err) {
         console.log(err);
