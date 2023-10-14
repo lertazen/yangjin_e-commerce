@@ -28,7 +28,6 @@ const UserOrder = () => {
               return { ...order, products: updatedProducts };
             })
           );
-          console.log(fetchedOrders);
           setOrders(updatedOrders);
         } else {
           setOrders([]);

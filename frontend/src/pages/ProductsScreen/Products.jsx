@@ -118,7 +118,6 @@ const Products = () => {
   };
 
   useEffect(() => {
-    console.log(sortMethod);
     fetchProductsData();
   }, [
     category,
