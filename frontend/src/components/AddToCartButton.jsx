@@ -4,6 +4,7 @@ import { ShoppingCartContext } from '../contexts/ShoppingCartContext';
 import { getUserInfo } from '../utils/userHelper';
 import { addItemToCart, fetchCartProducts } from '../services/cart-services';
 import { saveCartToLocal } from '../utils/cartHelper';
+import { checkAuthStatus } from '../services/user-services';
 
 const AddToCartButton = ({
   product,
@@ -47,27 +48,32 @@ const AddToCartButton = ({
       if (!userInfo) {
         addToLocalCart();
       } else {
-        const newProductsInfo = await addItemToCart([
-          { productId: product._id, quantity: quantity },
-        ]);
-        if (newProductsInfo) {
-          const newCartProducts = await fetchCartProducts(newProductsInfo);
-          if (newCartProducts) {
-            setCart(
-              newProductsInfo.map((productInfo) => {
-                const newProduct = newCartProducts.find(
-                  (p) => p._id === productInfo.productId
-                );
-                return {
-                  cartProduct: newProduct,
-                  cartQuantity: productInfo.quantity,
-                };
-              })
-            );
-            setAlertMessage(`${product.productName} added successfully`);
-            setAlertSeverity('success');
-            setSnackbarOpen(true);
+        const isLoggedIn = await checkAuthStatus();
+        if (isLoggedIn) {
+          const newProductsInfo = await addItemToCart([
+            { productId: product._id, quantity: quantity },
+          ]);
+          if (newProductsInfo) {
+            const newCartProducts = await fetchCartProducts(newProductsInfo);
+            if (newCartProducts) {
+              setCart(
+                newProductsInfo.map((productInfo) => {
+                  const newProduct = newCartProducts.find(
+                    (p) => p._id === productInfo.productId
+                  );
+                  return {
+                    cartProduct: newProduct,
+                    cartQuantity: productInfo.quantity,
+                  };
+                })
+              );
+              setAlertMessage(`${product.productName} added successfully`);
+              setAlertSeverity('success');
+              setSnackbarOpen(true);
+            }
           }
+        } else {
+          addToLocalCart();
         }
       }
     } catch (err) {

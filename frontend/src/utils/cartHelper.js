@@ -4,6 +4,7 @@ import {
   fetchCartProducts,
   deleteItemInCart,
 } from '../services/cart-services';
+import { checkAuthStatus } from '../services/user-services';
 
 // productsInfo: an array of objects -> {productId, quantity}
 const fetchCartData = async () => {
@@ -83,27 +84,39 @@ const loadCartFromLocal = () => {
 
 const handleUpdateQuantity = async (cart, setCart, index, changeAmount) => {
   try {
-    const newProductsInfo = await updateItemQuantityInCart([
-      {
-        productId: cart[index].cartProduct._id,
-        quantity: cart[index].cartQuantity + changeAmount,
-      },
-    ]);
-    if (newProductsInfo) {
-      const newCartProducts = await fetchCartProducts(newProductsInfo);
-      if (newCartProducts) {
-        setCart(
-          newProductsInfo.map((productInfo) => {
-            const newProduct = newCartProducts.find(
-              (p) => p._id === productInfo.productId
-            );
-            return {
-              cartProduct: newProduct,
-              cartQuantity: productInfo.quantity,
-            };
-          })
-        );
+    const isAuthorized = await checkAuthStatus();
+    if (isAuthorized) {
+      const newProductsInfo = await updateItemQuantityInCart([
+        {
+          productId: cart[index].cartProduct._id,
+          quantity: cart[index].cartQuantity + changeAmount,
+        },
+      ]);
+      if (newProductsInfo) {
+        const newCartProducts = await fetchCartProducts(newProductsInfo);
+        if (newCartProducts) {
+          setCart(
+            newProductsInfo.map((productInfo) => {
+              const newProduct = newCartProducts.find(
+                (p) => p._id === productInfo.productId
+              );
+              return {
+                cartProduct: newProduct,
+                cartQuantity: productInfo.quantity,
+              };
+            })
+          );
+        }
       }
+    } else {
+      setCart((prevCart) => {
+        const newCart = [...prevCart];
+        const itemToUpdate = { ...newCart[index] };
+        itemToUpdate.cartQuantity += changeAmount;
+        newCart[index] = itemToUpdate;
+
+        return newCart;
+      });
     }
   } catch (err) {
     throw new Error(err);
@@ -111,26 +124,39 @@ const handleUpdateQuantity = async (cart, setCart, index, changeAmount) => {
 };
 
 const handleDeleteItemInCart = async (cart, setCart, index) => {
-  const newProductsInfo = await deleteItemInCart([
-    {
-      productId: cart[index].cartProduct._id,
-    },
-  ]);
-  if (newProductsInfo) {
-    const newCartProducts = await fetchCartProducts(newProductsInfo);
-    if (newCartProducts) {
-      setCart(
-        newProductsInfo.map((productInfo) => {
-          const newProduct = newCartProducts.find(
-            (p) => p._id === productInfo.productId
+  try {
+    const isAuthorized = await checkAuthStatus();
+    if (isAuthorized) {
+      const newProductsInfo = await deleteItemInCart([
+        {
+          productId: cart[index].cartProduct._id,
+        },
+      ]);
+      if (newProductsInfo) {
+        const newCartProducts = await fetchCartProducts(newProductsInfo);
+        if (newCartProducts) {
+          setCart(
+            newProductsInfo.map((productInfo) => {
+              const newProduct = newCartProducts.find(
+                (p) => p._id === productInfo.productId
+              );
+              return {
+                cartProduct: newProduct,
+                cartQuantity: productInfo.quantity,
+              };
+            })
           );
-          return {
-            cartProduct: newProduct,
-            cartQuantity: productInfo.quantity,
-          };
-        })
+        }
+      }
+    } else {
+      setCart((prevCart) =>
+        prevCart.filter(
+          (prod) => prod.cartProduct._id !== prevCart[index].cartProduct._id
+        )
       );
     }
+  } catch (err) {
+    throw err;
   }
 };
 

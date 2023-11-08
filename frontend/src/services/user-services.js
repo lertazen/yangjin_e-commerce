@@ -118,7 +118,6 @@ const checkAuthStatus = async () => {
     const data = await response.json();
     return data.tokenStatus;
   } catch (err) {
-    console.log(err);
     return false;
   }
 };
