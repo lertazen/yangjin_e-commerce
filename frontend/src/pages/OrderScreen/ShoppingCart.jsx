@@ -18,6 +18,7 @@ import {
   saveCartToLocal,
 } from '../../utils/cartHelper';
 import AlertSnackbar from '../../components/AlertSnackbar';
+import CheckoutButton from '../../components/CheckoutButton';
 
 const ShoppingCart = () => {
   const { cart, setCart } = useContext(ShoppingCartContext);
@@ -269,19 +270,14 @@ const ShoppingCart = () => {
             <Typography variant='subtitle1'>${subtotal}</Typography>
           </Box>
           <Divider sx={{ width: { sm: '50%', md: '100%' } }} />
-          <Button
-            component={RouterLink}
-            to='/checkout/information'
-            variant='contained'
+          <CheckoutButton
             sx={{
               textTransform: 'none',
               mt: 3,
               width: { sm: '50%', md: '100%' },
             }}
             disabled={cart.length === 0}
-          >
-            Checkout
-          </Button>
+          />
           <Button
             component={RouterLink}
             to='/products/all'
