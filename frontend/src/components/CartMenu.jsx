@@ -23,6 +23,7 @@ import {
   saveCartToLocal,
 } from '../utils/cartHelper';
 import AlertSnackbar from './AlertSnackbar';
+import CheckoutButton from './CheckoutButton';
 
 const CartMenu = ({ open, onClose }) => {
   const { cart, setCart } = useContext(ShoppingCartContext);
@@ -311,14 +312,7 @@ const CartMenu = ({ open, onClose }) => {
             >
               View my cart ({cart.length})
             </Button>
-            <Button
-              variant='contained'
-              component={RouterLink}
-              to='/checkout/information'
-              sx={{ flex: 1 }}
-            >
-              Check out
-            </Button>
+            <CheckoutButton sx={{ flex: 1 }} disabled={cart.length === 0} />
           </Box>
         </Box>
       ) : (
